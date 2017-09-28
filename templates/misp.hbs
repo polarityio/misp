@@ -1,0 +1,118 @@
+<div class = "url">
+    {{#if block.data.details.uri}}
+    <a href="{{block.data.details.uri}}"> (View in MISP) </a>
+    {{/if}}
+</div>
+
+<div class="dnsdball">
+    {{#each block.data.details.body as |item|}}
+
+
+    <div class = "rtype">
+        {{#if item.Event.id}}
+        <i class = "fa fa-info-circle #ADADAD"></i><span class="type"> <b>Event ID: </b> </span>
+        {{item.Event.id}}
+        {{/if}}
+    </div>
+
+    <div class = "count">
+        {{#if item.Event.threat_level_id}}
+        <span class="counts"> Threat_Level: </span>
+        <b>{{item.Event.threat_level_id}}</b>
+        {{/if}}
+    </div>
+
+    <div class = "bali">
+        {{#if item.Event.info}}
+        <span class="balis"> Info: </span>
+        <b>{{item.Event.info}}</b>
+        {{/if}}
+    </div>
+
+    <div class = "first">
+        {{#if item.Event.date}}
+        <span class="Ctimefirst"> Date: </span>
+        <b>{{item.Event.date}}</b>
+        {{/if}}
+    </div>
+
+    <div class = "last">
+        {{#if item.Event.Org.name}}
+        <span class="Ctimelast"> Org: </span>
+        <b>{{item.Event.Org.name}}</b>
+        {{/if}}
+    </div>
+
+    <div class = "rname">
+        {{#if item.Event.Orgc.name}}
+        <span class="name"> Outside Org: </span>
+        <b>{{item.Event.Orgc.name}}</b>
+        {{/if}}
+    </div>
+
+    <div class = "rrdata">
+        {{#if item.Event.Tag}}
+        <span class="datas"> Tags: </span>
+        {{/if}}
+        {{#if item.Event.Tag}}
+        {{#each item.Event.Tag as |data|}}
+        <li>{{data.name}}</li>
+        {{/each}}
+        {{else}}
+        {{/if}}
+    </div>
+    {{/each}}
+</div>
+
+
+<div class="attributes">
+{{#each block.data.details.attributes as |item|}}
+
+<div class = "attid">
+    {{#if item.id}}
+    <i class = "fa fa-info-circle #ADADAD"></i><span class="type"> <b>Attribute ID: </b> </span>
+    {{item.id}}
+    {{/if}}
+</div>
+
+<div class = "type">
+    {{#if item.type}}
+    <span class="countss"> Type: </span>
+    <b>{{item.type}}</b>
+    {{/if}}
+</div>
+
+<div class = "category">
+    {{#if item.category}}
+    <span class="cat"> Category: </span>
+    <b>{{item.category}}</b>
+    {{/if}}
+</div>
+
+<div class = "time">
+    {{#if item.timestamp}}
+    <span class="Ctimefirst"> Timestamp: </span>
+    <b>{{moment-time item.timestamp}}</b>
+    {{/if}}
+</div>
+
+<div class = "comment">
+    {{#if item.comment}}
+    <span class="name"> Comments: </span>
+    <b>{{item.comment}}</b>
+    {{/if}}
+</div>
+
+<div class = "shadow">
+    {{#if item.ShadowAttribute}}
+    <span class="datas"> Shadow Attributes: </span>
+    {{/if}}
+    {{#if item.ShadowAttribute}}
+    {{#each item.ShadowAttribute as |data|}}
+    <li>{{data}}</li>
+    {{/each}}
+    {{else}}
+    {{/if}}
+</div>
+{{/each}}
+</div>
