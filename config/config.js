@@ -20,6 +20,7 @@ module.exports = {
             "key"         : "apiKey",
             "name"        : "Authentication Key",
             "description" : "MISP API key",
+            "default": "",
             "type"        : "text",
             "userCanEdit" : false,
             "adminOnly"    : false
@@ -28,6 +29,7 @@ module.exports = {
             "key"         : "uri",
             "name"        : "MISP URL",
             "description" : "URL of your MISP instance",
+            "default": "",
             "type"        : "text",
             "userCanEdit" : false,
             "adminOnly"    : false
