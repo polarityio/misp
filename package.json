@@ -2,11 +2,11 @@
   "main": "./integration.js",
   "name": "MISP",
   "description": "Maleware Information and Sharing Platform",
-  "version": "3.0.0-beta",
+  "version": "3.0.1-beta",
   "private": true,
   "dependencies": {
-    "request": "2.76.0",
-    "async": "2.1.2",
+    "request": "2.88.0",
+    "async": "2.6.1",
     "@ctrl/tinycolor": "2.2.1"
   }
 }
