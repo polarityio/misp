@@ -1,118 +1,121 @@
-<div class = "url">
-    {{#if block.data.details.uri}}
-    <a href="{{block.data.details.uri}}"> (View in MISP) </a>
+{{#each block.data.details as |attribute index|}}
+    {{#if (gt index 0)}}
+        <hr>
     {{/if}}
-</div>
-
-<div class="dnsdball">
-    {{#each block.data.details.body as |item|}}
-
-
-    <div class = "rtype">
-        {{#if item.Event.id}}
-        <i class = "fa fa-info-circle #ADADAD"></i><span class="type"> <b>Event ID: </b> </span>
-        {{item.Event.id}}
-        {{/if}}
+    <div>
+        <span class="p-title">Attribute</span>
     </div>
-
-    <div class = "count">
-        {{#if item.Event.threat_level_id}}
-        <span class="counts"> Threat_Level: </span>
-        <b>{{item.Event.threat_level_id}}</b>
-        {{/if}}
+    <div>
+        <span class="p-key">Type: </span>
+        <span class="p-value">{{attribute.type}}</span>
     </div>
-
-    <div class = "bali">
-        {{#if item.Event.info}}
-        <span class="balis"> Info: </span>
-        <b>{{item.Event.info}}</b>
-        {{/if}}
+    <div>
+        <span class="p-key">Category: </span>
+        <span class="p-value">{{attribute.category}}</span>
     </div>
-
-    <div class = "first">
-        {{#if item.Event.date}}
-        <span class="Ctimefirst"> Date: </span>
-        <b>{{item.Event.date}}</b>
-        {{/if}}
+    <div>
+        <span class="p-key">Timestamp: </span>
+        <span class="p-value">
+            {{moment-format (unix attribute.timestamp) 'MM/DD/YYYY' timeZone=timezone}}
+        </span>
     </div>
+    {{#if attribute.comment}}
+        <div>
+            <span class="p-key">Comment: </span>
+            <span class="p-value">{{attribute.comment}}</span>
+        </div>
+    {{/if}}
 
-    <div class = "last">
-        {{#if item.Event.Org.name}}
-        <span class="Ctimelast"> Org: </span>
-        <b>{{item.Event.Org.name}}</b>
-        {{/if}}
+    <div>
+        <span class="p-title">Event
+             <span class="view-in-misp">
+        <a href="{{block.userOptions.uri}}/events/view/{{attribute.Event.id}}">
+           (View in MISP {{fa-icon "external-link"}})</a></span>
+        </span>
     </div>
-
-    <div class = "rname">
-        {{#if item.Event.Orgc.name}}
-        <span class="name"> Outside Org: </span>
-        <b>{{item.Event.Orgc.name}}</b>
-        {{/if}}
+    <div>
+        <span class="p-key">Info: </span>
+        <span class="p-value">{{attribute.Event.info}}</span>
     </div>
+    <div>
+        <span class="p-key">Date: </span>
+        <span class="p-value">{{moment-format (unix attribute.Event.date) 'MM/DD/YYYY' timeZone=timeZone}}</span>
+    </div>
+    {{#if attribute.Event.details.Orgc}}
+    <div>
+        <span class="p-key">Org: </span>
+        <span class="p-value"><a href="{{block.userOptions.uri}}/organisations/view/{{attribute.Event.details.Orgc.id}}">{{attribute.Event.details.Orgc.name}}{{fa-icon "external-link" class="external-link-icon"}}</a></span>
+    </div>
+    {{/if}}
+    {{#if attribute.Event.details.Org}}
+    <div>
+        <span class="p-key">Owner Org: </span>
+        <span class="p-value"><a href="{{block.userOptions.uri}}/organisations/view/{{attribute.Event.details.Org.id}}">{{attribute.Event.details.Org.name}}{{fa-icon "external-link" class="external-link-icon"}}</a></span>
+    </div>
+    {{/if}}
+    <div>
+        <span class="p-key">Attribute Count: </span>
+        <span class="p-value">{{attribute.Event.details.attribute_count}}</span>
+    </div>
+    <div>
+        <span class="p-key">Threat Level: </span>
+        <span class="p-value">{{attribute.Event.details.threat_level}}</span>
+    </div>
+    <div>
+        <span class="p-key">Analysis: </span>
+        <span class="p-value">{{attribute.Event.details.analysis_level}}</span>
+    </div>
+    <div>
+        <span class="p-key">Published: </span>
+        <span class="p-value">{{#if attribute.Event.details.published}}<span class="is-published">Yes</span> ({{moment-format (unix attribute.Event.details.publish_timestamp) 'MM/DD/YYYY' timeZone=timezone}}){{else}}<span class="is-not-published">No</span>{{/if}}</span>
+    </div>
+    <div>
+        <span class="p-key">Distribution: </span>
+        <span class="p-value {{if (eq attribute.Event.details.distribution "0") "text-red"}}">{{attribute.Event.details.distribution_level}}</span>
+    </div>
+    <div class="tag-container">
+        {{#each attribute.Tag as |tag tagIndex|}}
+            <span class="tag">
+                <span class="text-container {{unless block.userOptions.enableRemovingTags "rounded-borders"}}" style="background-color:{{tag.colour}}; color: {{tag.font_color}}">
+                    {{tag.name}}
+                </span>{{#if block.userOptions.enableRemovingTags}}<span class="remove-icon-container" {{action "removeTag" tag.id attribute.Event.id index tagIndex}}>
+                    {{fa-icon "times" class="tag-close-icon" fixedWidth=true}}
+            </span>{{/if}}
+            </span>
 
-    <div class = "rrdata">
-        {{#if item.Event.Tag}}
-        <span class="datas"> Tags: </span>
-        {{/if}}
-        {{#if item.Event.Tag}}
-        {{#each item.Event.Tag as |data|}}
-        <li>{{data.name}}</li>
         {{/each}}
-        {{else}}
+        {{#if block.userOptions.enableAddingTags}}
+            {{#unless attribute.showAddTagModal}}
+                <button class="open-modal-btn" {{action "openAddTagModal" index}}>
+                    {{#if loadingTags}}
+                        {{fa-icon "sync" class="open-modal-btn-icon" spin=true fixedWidth=true}}
+                    {{else}}
+                        {{fa-icon "plus" class="open-modal-btn-icon" fixedWidth=true}}
+                    {{/if}}
+                </button>
+            {{/unless}}
+        {{/if}}
+        {{#if attribute.showAddTagModal}}
+            <div class="show-tag-modal">
+                <div>
+                    {{#power-select-multiple
+                            disabled=loadingTags
+                            options=tags
+                            selected=tag
+                            searchField="name"
+                            placeholder="Select Tags"
+                            onchange=(action (mut tag))
+                    as |tag|}}
+                        <span class="p-tag" style="word-break: break-word; margin: 10px 0; display:inline-block; line-height: 1.2em; font-size: 12px; box-shadow: 3px 3px 3px #888888; padding: 4px; border-radius: 4px; background-color:{{tag.colour}}; color: {{tag.font_color}}">{{tag.name}}</span>
+                    {{/power-select-multiple}}
+                </div>
+                <div class="modal-buttons">
+                    <button class="misp-btn" {{action "closeAddTagModal" index}}>Cancel</button>
+                    <button class="misp-btn" {{action "addTags" attribute.Event.id index}}>Add Tags</button>
+                </div>
+            </div>
         {{/if}}
     </div>
-    {{/each}}
-</div>
-
-
-<div class="attributes">
-{{#each block.data.details.attributes as |item|}}
-
-<div class = "attid">
-    {{#if item.id}}
-    <i class = "fa fa-info-circle #ADADAD"></i><span class="type"> <b>Attribute ID: </b> </span>
-    {{item.id}}
-    {{/if}}
-</div>
-
-<div class = "type">
-    {{#if item.type}}
-    <span class="countss"> Type: </span>
-    <b>{{item.type}}</b>
-    {{/if}}
-</div>
-
-<div class = "category">
-    {{#if item.category}}
-    <span class="cat"> Category: </span>
-    <b>{{item.category}}</b>
-    {{/if}}
-</div>
-
-<div class = "time">
-    {{#if item.timestamp}}
-    <span class="Ctimefirst"> Timestamp: </span>
-    <b>{{moment-time item.timestamp}}</b>
-    {{/if}}
-</div>
-
-<div class = "comment">
-    {{#if item.comment}}
-    <span class="name"> Comments: </span>
-    <b>{{item.comment}}</b>
-    {{/if}}
-</div>
-
-<div class = "shadow">
-    {{#if item.ShadowAttribute}}
-    <span class="datas"> Shadow Attributes: </span>
-    {{/if}}
-    {{#if item.ShadowAttribute}}
-    {{#each item.ShadowAttribute as |data|}}
-    <li>{{data}}</li>
-    {{/each}}
-    {{else}}
-    {{/if}}
-</div>
 {{/each}}
-</div>
+
+

@@ -1,127 +1,122 @@
-/*
- All integrations are namespaced with the class `<integration_id>-integration`.  When creating custom
- CSS to style your integration you should ensure that all your classes are appropriately namespaced to prevent
- your css from affecting other integrations.  Note that the integration id is based off the name of the integration
- directory.
-*/
-.dnsdb-integration {
+.tag-container {
+  margin-top: 5px;
 }
 
-div.url {
-  padding-left: 5px;
-  padding-bottom: 3px;
-  font-weight: 300;
-  font-size: 12px;
-  text-align: left;
+.p-tag {
+  box-shadow: 3px 3px 3px #888888;
 }
 
-
-div.count {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
+.external-link-icon {
+  font-size: 8px;
+  margin-left: 2px;
 }
 
-div.bali {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
+.tag {
+  border-radius: 4px;
+  display: inline-block;
+  line-height: 14px;
+  box-shadow: 3px 3px 3px #888888;
+  margin: 0 0 4px 0;
+  background-color: #000;
+  padding: 0;
 
-div.first {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
-
-div.last {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
-
-div.rtype {
-  text-align: left;
-  font-size: 12px;
-  padding-left: 5px;
-  font-weight: 600;
-  color: #ADADAD ;
-}
-
-div.rname {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
-
-
-div.rrdata {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-  li{
-    margin-left: 15px;
-    font-size: 12px;
-    font-weight: 300;
+  .text-container {
+    padding: 3px 3px 3px 3px;
+    border-radius: 4px 0 0 4px;
+    display: inline-block;
   }
-  padding-bottom: 10px;
-}
+
+  .remove-icon-container {
+    border-radius: 0px 4px 4px 0px;
+    padding: 0 0px 0 0;
+    display: inline-block;
+    color: #fff;
 
 
-div.type {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
+    .tag-close-icon {
+      font-size: 9px;
+    }
 
-div.category {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
-
-div.time {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
-
-
-div.attid {
-  text-align: left;
-  font-size: 12px;
-  padding-left: 5px;
-  font-weight: 600;
-  color: #ADADAD ;
-}
-
-div.comment {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-}
-
-
-div.shadow {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 300;
-  padding-left: 5px;
-  li{
-    margin-left: 15px;
-    font-size: 12px;
-    font-weight: 300;
+    .tag-close-icon:hover {
+      color: #ff0000;
+    }
   }
-  padding-bottom: 10px;
 }
 
+.view-in-misp {
+  margin-left: 5px;
+}
+
+.is-published, .text-green {
+  color: #008000;
+}
+
+.is-not-published, .text-red {
+  color: #ff0000;
+}
+
+.ember-power-select-dropdown {
+  .p-tag {
+    box-shadow: 3px 3px 3px #888888;
+  }
+}
+
+.open-modal-btn{
+  border-radius: 4px;
+  background-color: #363636;
+  color: #fff;
+
+  .open-modal-btn-icon{
+    font-size: 9px;
+  }
+}
+
+.open-modal-btn:hover{
+  background-color: darken(#363636, 10%);
+}
+
+.misp-btn{
+  border-radius: 4px;
+  background-color: #363636;
+  color: #fff;
+}
+
+.misp-btn:hover{
+  background-color: darken(#363636, 10%);
+}
+
+.rounded-borders{
+  border-radius: 4px !important;
+}
+
+.show-tag-modal {
+  overflow: hidden;
+  margin-top: 10px;
+  background-color: #eee;
+  padding: 5px;
+  border-radius: 4px;
+
+  .modal-buttons{
+    float: right;
+    margin-top: 5px;
+  }
+  .ember-power-select-multiple-option {
+    margin: 0 2px 2px 0;
+    word-break: break-word;
+
+    .p-tag{
+      margin: 0 !important;
+    }
+  }
+
+  .ember-power-select-trigger {
+    padding: 2px 30px 0 2px;
+    line-height: 30px;
+    min-height: 30px;
+    white-space: normal;
+  }
+
+  .ember-power-select-trigger-multiple-input {
+    max-width: 100%;
+  }
+}

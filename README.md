@@ -1,31 +1,41 @@
 # Polarity MISP Integration
 
-The Polarity MISP integration allows Polarity to search your instance of MISP to return valid information about domains, IPS, and hashes.
+The Polarity MISP integration allows Polarity to search your instance of MISP to return valid information about domains, IPs, and hashes.  The integration also allows you to add and remove tags from events.
 
-![misp_screenshot](https://user-images.githubusercontent.com/22529325/30965906-04f741d8-a425-11e7-837d-4def93426393.png)
+![d0d670e2-ba81-4ce8-b135-bbe47f1ef31e](https://user-images.githubusercontent.com/306319/52191578-6aa1f780-2813-11e9-91ae-fa181bfe99ee.GIF)
 
 
 ## MISP Integration Options
 
+### MISP URL
+
+URL of your MISP instance to include the schema (i.e., https://) and port if applicable
+
+```
+https://my-misp-server.internal
+```
 
 ### API Key
 
-In order to use the MISP integration, you must have generated a valid MISP API key from your user settings.
+The authentication of the automation is performed via a secure key available in the MISP UI interface. Make sure you keep that key secret as it gives access to the entire database! The API key is available in the event actions menu under automation
 
+### Enable Adding Tags
 
-### MISP URL
+If checked, users can add tags to an event from the Overlay Window
 
-In order to for the MISP integration to work, you must provide the URL of your MISP instance. You do not need to include the "https://"
+> Note that we recommend setting this option as an admin only option so the value is consistent across all your users.
 
-### Lookup Options
+### Enable Removing Tags
 
-Each user has the ability to lookup the different data types in MISP. You can have MISP lookup: IPS, MD5 hashes, SHA1 hashes, SHA256 hashes, and domains.
+If checked, users can remove tags from an event from the Overlay Window
 
+> Note that we recommend setting this option as an admin only option so the value is consistent across all your users.
 
 
 ## Installation Instructions
 
 Installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
+
 ## Polarity
 
 Polarity is a memory-augmentation platform that improves and accelerates analyst decision making.  For more information about the Polarity platform please see:
