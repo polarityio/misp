@@ -280,24 +280,36 @@ function onMessage(payload, options, cb) {
 
 function _setTagFontColor(attributes) {
   for (let attribute of attributes) {
-    for (let tag of attribute.Tag) {
-      tag.font_color = new TinyColor(tag.colour).isDark() ? '#ffffff' : '#000000';
+    if (Array.isArray(attribute.Tag)) {
+      for (let tag of attribute.Tag) {
+        tag.font_color = new TinyColor(tag.colour).isDark() ? '#ffffff' : '#000000';
+      }
     }
   }
 }
 
-function _getTags(attributes) {
+function _getSummaryTags(attributes) {
   const tags = new Set();
   for (let attribute of attributes) {
-    for (let tag of attribute.Tag) {
-      tags.add(tag.name);
-      if (tags.length >= MAX_SUMMARY_TAGS) {
-        return [...tags];
+    if (typeof attribute.category === 'string' && attribute.category.length > 0) {
+      tags.add(attribute.category);
+    }
+    if (Array.isArray(attribute.Tag)) {
+      for (let tag of attribute.Tag) {
+        tags.add(tag.name);
+        if (tags.length >= MAX_SUMMARY_TAGS) {
+          return [...tags];
+        }
       }
     }
   }
 
-  return [...tags];
+  let tagList = [...tags];
+  if (tagList.length === 0) {
+    tagList.push('no summary data');
+  }
+
+  return tagList;
 }
 
 function _getAttributeSearchUri(options) {
@@ -394,7 +406,7 @@ function _lookupEntity(entityObj, options, cb) {
         cb(null, {
           entity: entityObj,
           data: {
-            summary: _getTags(body.response.Attribute),
+            summary: _getSummaryTags(body.response.Attribute),
             details: body.response.Attribute
           }
         });
@@ -441,7 +453,7 @@ function _validateAttributePayload(cb) {
 
 function _handleRequestErrors(cb) {
   return (err, response, body) => {
-    log.trace({err, body}, '_handleRequestErrors');
+    log.trace({ err, body }, '_handleRequestErrors');
     if (err || typeof response === 'undefined' || typeof body === 'undefined') {
       return cb({
         detail: 'HTTP Request Error',
