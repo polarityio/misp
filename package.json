@@ -2,7 +2,7 @@
   "main": "./integration.js",
   "name": "MISP",
   "description": "Maleware Information and Sharing Platform",
-  "version": "3.0.2-beta",
+  "version": "3.0.3-beta",
   "private": true,
   "dependencies": {
     "request": "^2.88",
@@ -10,4 +10,3 @@
     "@ctrl/tinycolor": "^2.2"
   }
 }
-
