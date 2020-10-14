@@ -337,7 +337,6 @@ function _getAttributeRequestOptions(entityObj, options) {
     json: true
   };
 
-  log.info(requestOptions);
   return requestOptions;
 }
 
