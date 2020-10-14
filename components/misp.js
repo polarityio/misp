@@ -15,7 +15,6 @@ polarity.export = PolarityComponent.extend({
     });
   },
   actions: {
-    foo() {},
     removeTag(tagId, eventId, attributeIndex, tagIndex) {
       let self = this;
 
