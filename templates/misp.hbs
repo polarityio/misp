@@ -104,7 +104,7 @@
                             selected=tag
                             searchField="name"
                             placeholder="Select Tags"
-                            onchange=(action (mut tag))
+                            onChange=(action (mut tag))
                     as |tag|}}
                         <span class="p-tag" style="word-break: break-word; margin: 10px 0; display:inline-block; line-height: 1.2em; font-size: 12px; box-shadow: 3px 3px 3px #888888; padding: 4px; border-radius: 4px; background-color:{{tag.colour}}; color: {{tag.font_color}}">{{tag.name}}</span>
                     {{/power-select-multiple}}
