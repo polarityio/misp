@@ -313,11 +313,13 @@ function _getSummaryTags(attributes) {
 }
 
 function _getAttributeSearchUri(options) {
-  return `${options.uri}/attributes/restSearch`;
+  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri
+  return `${uri}/attributes/restSearch`;
 }
 
 function _getEventSearchUri(options) {
-  return `${options.uri}/events/index`;
+  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri
+  return `${uri}/events/index`;
 }
 
 function _getAttributeRequestOptions(entityObj, options) {
