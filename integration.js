@@ -73,8 +73,8 @@ function doLookup(entities, options, cb) {
 
   async.each(
     entities,
-    function(entityObj, next) {
-      _lookupEntity(entityObj, options, function(err, result) {
+    function (entityObj, next) {
+      _lookupEntity(entityObj, options, function (err, result) {
         if (err) {
           next(err);
         } else {
@@ -83,7 +83,7 @@ function doLookup(entities, options, cb) {
         }
       });
     },
-    function(err) {
+    function (err) {
       cb(err, lookupResults);
     }
   );
@@ -120,6 +120,90 @@ function _shouldRefreshCache() {
     return true;
   }
   return false;
+}
+
+function _removeTagFromEvent(eventId, tagId, options, cb) {
+  requestWithDefaults(
+    {
+      uri: `${options.uri}/events/removeTag`,
+      method: 'POST',
+      json: true,
+      headers: {
+        Authorization: options.apiKey
+      },
+      body: {
+        request: {
+          id: eventId,
+          tag: tagId
+        }
+      }
+    },
+    (err, response, body) => {
+      if (err) {
+        return cb({
+          detail: 'HTTP request error when removing tag(s) from event',
+          err: err
+        });
+      }
+
+      if (body.saved === true) {
+        return cb(null, body);
+      } else if (body.saved === false) {
+        return cb({
+          detail: body.errors
+        });
+      }
+
+      const unexpectedResponseError = {
+        detail: 'Unexpected response when removing tags from event',
+        err: err,
+        response: response
+      };
+
+      log.error(unexpectedResponseError);
+
+      cb(unexpectedResponseError);
+    }
+  );
+}
+
+function _removeTagFromAttribute(attributeId, tagId, options, cb) {
+  requestWithDefaults(
+    {
+      uri: `${options.uri}/attributes/removeTag/${attributeId}/${tagId}`,
+      method: 'POST',
+      json: true,
+      headers: {
+        Authorization: options.apiKey
+      }
+    },
+    (err, response, body) => {
+      if (err) {
+        return cb({
+          detail: 'HTTP request error when removing tag(s) from attribute',
+          err: err
+        });
+      }
+
+      if (body.saved === true) {
+        return cb(null, body);
+      } else if (body.saved === false) {
+        return cb({
+          detail: body.errors
+        });
+      }
+
+      const unexpectedResponseError = {
+        detail: 'Unexpected response when removing tags from attribute',
+        err: err,
+        response: response
+      };
+
+      log.error(unexpectedResponseError);
+
+      cb(unexpectedResponseError);
+    }
+  );
 }
 
 function onMessage(payload, options, cb) {
@@ -169,56 +253,25 @@ function onMessage(payload, options, cb) {
         }
       );
       break;
-    case 'REMOVE_TAG':
+    case 'REMOVE_TAG_FROM_EVENT':
       if (options.enableRemovingTags === false) {
         return cb({
           detail: 'Tag removal is not enabled'
         });
       }
 
-      requestWithDefaults(
-        {
-          uri: `${options.uri}/events/removeTag`,
-          method: 'POST',
-          json: true,
-          headers: {
-            Authorization: options.apiKey
-          },
-          body: {
-            request: {
-              id: payload.eventId,
-              tag: payload.tagId
-            }
-          }
-        },
-        (err, response, body) => {
-          if (err) {
-            return cb({
-              detail: 'HTTP request error when adding tag(s)',
-              err: err
-            });
-          }
+      log.info(payload, 'REMOVE_TAG_FROM_EVENT Payload');
+      _removeTagFromEvent(payload.eventId, payload.tagId, options, cb);
+      break;
+    case 'REMOVE_TAG_FROM_ATTRIBUTE':
+      if (options.enableRemovingTags === false) {
+        return cb({
+          detail: 'Tag removal is not enabled'
+        });
+      }
 
-          if (body.saved === true) {
-            return cb(null, body);
-          } else if (body.saved === false) {
-            return cb({
-              detail: body.errors
-            });
-          }
-
-          const unexpectedResponseError = {
-            detail: 'Unexpected response when adding tags',
-            err: err,
-            response: response
-          };
-
-          log.error(unexpectedResponseError);
-
-          return cb(unexpectedResponseError);
-        }
-      );
-
+      log.info(payload, 'REMOVE_TAG_FROM_ATTRIBUTE Payload');
+      _removeTagFromAttribute(payload.attributeId, payload.tagId, options, cb);
       break;
     case 'ADD_TAGS':
       if (options.enableAddingTags === false) {
@@ -313,12 +366,12 @@ function _getSummaryTags(attributes) {
 }
 
 function _getAttributeSearchUri(options) {
-  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri
+  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri;
   return `${uri}/attributes/restSearch`;
 }
 
 function _getEventSearchUri(options) {
-  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri
+  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri;
   return `${uri}/events/index`;
 }
 

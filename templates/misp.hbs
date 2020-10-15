@@ -78,7 +78,7 @@
             <span class="tag">
                 <span class="text-container {{unless block.userOptions.enableRemovingTags "rounded-borders"}}" style="background-color:{{tag.colour}}; color: {{tag.font_color}}">
                     {{tag.name}}
-                </span>{{#if block.userOptions.enableRemovingTags}}<span class="remove-icon-container" {{action "removeTag" tag.id attribute.Event.id index tagIndex}}>
+                </span>{{#if block.userOptions.enableRemovingTags}}<span class="remove-icon-container" {{action "removeTag" attribute.id tag attribute.Event.id index tagIndex}}>
                     {{fa-icon "times" class="tag-close-icon" fixedWidth=true}}
             </span>{{/if}}
             </span>
@@ -103,6 +103,7 @@
                             options=tags
                             selected=tag
                             searchField="name"
+                            searchEnabled=true
                             placeholder="Select Tags"
                             onChange=(action (mut tag))
                     as |tag|}}

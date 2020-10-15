@@ -15,15 +15,16 @@ polarity.export = PolarityComponent.extend({
     });
   },
   actions: {
-    removeTag(tagId, eventId, attributeIndex, tagIndex) {
+    removeTag(attributeId, tag, eventId, attributeIndex, tagIndex) {
       let self = this;
-
+      const tagId = tag.id;
       self.set('block.isLoadingDetails', true);
-
+      
       const payload = {
-        action: 'REMOVE_TAG',
+        action: typeof tag.local === 'boolean' && tag.local === false ? 'REMOVE_TAG_FROM_ATTRIBUTE' : 'REMOVE_TAG_FROM_EVENT',
         tagId: tagId,
-        eventId: eventId
+        eventId: eventId,
+        attributeId: attributeId
       };
 
       this.sendIntegrationMessage(payload)
