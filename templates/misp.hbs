@@ -75,7 +75,7 @@
     </div>
     <div class="tag-container">
         {{#each attribute.Tag as |tag tagIndex|}}
-            <span class="tag">
+          <span class="tag d-inline-flex align-items-center">
                 <span class="text-container {{unless block.userOptions.enableRemovingTags "rounded-borders"}}" style="background-color:{{tag.colour}}; color: {{tag.font_color}}">
                     {{tag.name}}
                 </span>{{#if block.userOptions.enableRemovingTags}}<span class="remove-icon-container" {{action "removeTag" attribute.id tag attribute.Event.id index tagIndex}}>
