@@ -2,6 +2,7 @@
 
 polarity.export = PolarityComponent.extend({
   tags: [],
+  filteredTags: [],
   selectedTags: [],
   showAddTagModal: false,
   timezone: Ember.computed('Intl', function () {
@@ -15,6 +16,22 @@ polarity.export = PolarityComponent.extend({
     });
   },
   actions: {
+    onSearch: function(searchTerm) {
+      const searchTermLower = searchTerm.toLowerCase();
+      const tags = this.get('tags');
+      const results = [];
+      for(let i=0; i<tags.length; i++){
+        const tag = tags[i];
+        const tagName = tag.name.toLowerCase();
+        if(tagName.includes(searchTermLower)){
+          results.push(tag);
+        }
+        if(results.length >= 50){
+          break;
+        }
+      }
+      return results;
+    },
     removeTag(attributeId, tag, eventId, attributeIndex, tagIndex) {
       let self = this;
       const tagId = tag.id;
@@ -96,7 +113,9 @@ polarity.export = PolarityComponent.extend({
         .then(
           function (tags) {
             self.set('tags', tags);
-            self.set('block.data.details.' + index + '.showAddTagModal', true);
+            // only show up to 100 tags in the select dropdown
+            self.set('filteredTags', tags.slice(0, 50));
+            self.set('block.data.details.' + index + '.showAddTagModal', true);;
           },
           function (err) {
             console.error(err);
