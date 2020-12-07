@@ -3,7 +3,7 @@
         <hr>
     {{/if}}
     <div>
-        <span class="p-title">Attribute</span>
+        <span class="p-title">{{fa-icon "box" fixedWidth=true}} Attribute</span>
     </div>
     <div>
         <span class="p-key">Type: </span>
@@ -27,7 +27,7 @@
     {{/if}}
 
     <div>
-        <span class="p-title">Event
+        <span class="p-title">{{fa-icon "calendar" fixedWidth=true}} Event
              <span class="view-in-misp">
         <a href="{{block.userOptions.uri}}/events/view/{{attribute.Event.id}}">
            (View in MISP {{fa-icon "external-link"}})</a></span>
@@ -75,10 +75,10 @@
     </div>
     <div class="tag-container">
         {{#each attribute.Tag as |tag tagIndex|}}
-            <span class="tag">
+          <span class="tag d-inline-flex align-items-center">
                 <span class="text-container {{unless block.userOptions.enableRemovingTags "rounded-borders"}}" style="background-color:{{tag.colour}}; color: {{tag.font_color}}">
                     {{tag.name}}
-                </span>{{#if block.userOptions.enableRemovingTags}}<span class="remove-icon-container" {{action "removeTag" tag.id attribute.Event.id index tagIndex}}>
+                </span>{{#if block.userOptions.enableRemovingTags}}<span class="remove-icon-container" {{action "removeTag" attribute.id tag attribute.Event.id index tagIndex}}>
                     {{fa-icon "times" class="tag-close-icon" fixedWidth=true}}
             </span>{{/if}}
             </span>
@@ -100,11 +100,13 @@
                 <div>
                     {{#power-select-multiple
                             disabled=loadingTags
-                            options=tags
                             selected=tag
+                            options=filteredTags
                             searchField="name"
-                            placeholder="Select Tags"
-                            onchange=(action (mut tag))
+                            searchEnabled=true
+                            placeholder="Type to search all tags"
+                            search=(action "onSearch")
+                            onChange=(action (mut tag))
                     as |tag|}}
                         <span class="p-tag" style="word-break: break-word; margin: 10px 0; display:inline-block; line-height: 1.2em; font-size: 12px; box-shadow: 3px 3px 3px #888888; padding: 4px; border-radius: 4px; background-color:{{tag.colour}}; color: {{tag.font_color}}">{{tag.name}}</span>
                     {{/power-select-multiple}}

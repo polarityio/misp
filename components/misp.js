@@ -2,12 +2,13 @@
 
 polarity.export = PolarityComponent.extend({
   tags: [],
+  filteredTags: [],
   selectedTags: [],
   showAddTagModal: false,
-  timezone: Ember.computed('Intl', function() {
+  timezone: Ember.computed('Intl', function () {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   }),
-  _flashError: function(msg) {
+  _flashError: function (msg) {
     this.get('flashMessages').add({
       message: 'MISP: ' + msg,
       type: 'unv-danger',
@@ -15,24 +16,41 @@ polarity.export = PolarityComponent.extend({
     });
   },
   actions: {
-    foo() {},
-    removeTag(tagId, eventId, attributeIndex, tagIndex) {
+    onSearch: function(searchTerm) {
+      const searchTermLower = searchTerm.toLowerCase();
+      const tags = this.get('tags');
+      const results = [];
+      for(let i=0; i<tags.length; i++){
+        const tag = tags[i];
+        const tagName = tag.name.toLowerCase();
+        if(tagName.includes(searchTermLower)){
+          results.push(tag);
+        }
+        if(results.length >= 50){
+          break;
+        }
+      }
+      return results;
+    },
+    removeTag(attributeId, tag, eventId, attributeIndex, tagIndex) {
       let self = this;
-
+      const tagId = tag.id;
       self.set('block.isLoadingDetails', true);
 
       const payload = {
-        action: 'REMOVE_TAG',
+        action:
+          typeof tag.local === 'boolean' && tag.local === false ? 'REMOVE_TAG_FROM_ATTRIBUTE' : 'REMOVE_TAG_FROM_EVENT',
         tagId: tagId,
-        eventId: eventId
+        eventId: eventId,
+        attributeId: attributeId
       };
 
       this.sendIntegrationMessage(payload)
         .then(
-          function(result) {
+          function (result) {
             const newTags = [];
             let tags = self.get('block.data.details.' + attributeIndex + '.Tag');
-            tags.forEach(function(tag, index) {
+            tags.forEach(function (tag, index) {
               if (index !== tagIndex) {
                 newTags.push(tag);
               }
@@ -40,7 +58,7 @@ polarity.export = PolarityComponent.extend({
 
             self.set('block.data.details.' + attributeIndex + '.Tag', newTags);
           },
-          function(err) {
+          function (err) {
             console.error(err);
             self._flashError(err.meta.detail, 'error');
           }
@@ -62,12 +80,12 @@ polarity.export = PolarityComponent.extend({
 
       this.sendIntegrationMessage(payload)
         .then(
-          function(result) {
+          function (result) {
             self.get('block.data.details.' + index + '.Tag').pushObjects(self.get('tag'));
             self.set('block.data.details.' + index + '.showAddTagModal', false);
             self.get('tag').clear();
           },
-          function(err) {
+          function (err) {
             console.error(err);
             self._flashError(err.meta.detail, 'error');
           }
@@ -93,11 +111,13 @@ polarity.export = PolarityComponent.extend({
 
       this.sendIntegrationMessage(payload)
         .then(
-          function(tags) {
+          function (tags) {
             self.set('tags', tags);
-            self.set('block.data.details.' + index + '.showAddTagModal', true);
+            // only show up to 100 tags in the select dropdown
+            self.set('filteredTags', tags.slice(0, 50));
+            self.set('block.data.details.' + index + '.showAddTagModal', true);;
           },
-          function(err) {
+          function (err) {
             console.error(err);
             self._flashError(err.meta.detail, 'error');
           }

@@ -3,7 +3,7 @@ module.exports = {
   acronym: 'MISP',
   logging: { level: 'info' },
   description: 'Malware Information and Sharing Platform (MISP) threat intelligence platform',
-  entityTypes: ['domain', 'IPv4', 'IPv6', 'hash'],
+  entityTypes: ['domain', 'IPv4', 'IPv6', 'hash', 'email'],
   styles: ['./styles/misp.less'],
   block: {
     component: {
@@ -51,7 +51,7 @@ module.exports = {
       name: 'Authentication Key',
       description: 'Your MISP API key',
       default: '',
-      type: 'text',
+      type: 'password',
       userCanEdit: true,
       adminOnly: false
     },
@@ -73,25 +73,5 @@ module.exports = {
       userCanEdit: false,
       adminOnly: true
     }
-    // {
-    //   key: 'tagWhiteList',
-    //   name: 'Tag White List',
-    //   description:
-    //     'Comma delimited list of tags to use as an `OR` search filter.  Only events with the listed tags will be included.  Leave blank for no white list.',
-    //   default: '',
-    //   type: 'text',
-    //   userCanEdit: true,
-    //   adminOnly: false
-    // },
-    // {
-    //   key: 'tagBlackList',
-    //   name: 'Tag Black List',
-    //   description:
-    //     'Comma delimited list of tags to not include in return results. Events with the listed tags will not be included in search results.  Leave blank for no black list.',
-    //   default: '',
-    //   type: 'text',
-    //   userCanEdit: true,
-    //   adminOnly: false
-    // }
   ]
 };
