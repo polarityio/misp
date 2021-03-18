@@ -5,6 +5,8 @@ module.exports = {
   description: 'Malware Information and Sharing Platform (MISP) threat intelligence platform',
   entityTypes: ['domain', 'IPv4', 'IPv6', 'hash', 'email'],
   styles: ['./styles/misp.less'],
+  defaultColor: "dark-purple",
+
   block: {
     component: {
       file: './components/misp.js'

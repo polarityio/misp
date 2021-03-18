@@ -2,7 +2,7 @@
   "main": "./integration.js",
   "name": "MISP",
   "description": "Malware Information and Sharing Platform",
-  "version": "3.0.5-beta",
+  "version": "3.0.6-beta",
   "private": true,
   "dependencies": {
     "request": "^2.88",
