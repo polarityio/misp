@@ -514,6 +514,62 @@ function _validateAttributePayload(cb) {
   };
 }
 
+function _isEntityBlocklisted(entity, options) {
+  const blocklist = options.blocklist;
+
+  Logger.trace({ blocklist: blocklist }, 'checking to see what blocklist looks like');
+
+  if (_.includes(blocklist, entity.value.toLowerCase())) {
+    return true;
+  }
+
+  if (entity.isIP && !entity.isPrivateIP) {
+    if (ipBlocklistRegex !== null) {
+      if (ipBlocklistRegex.test(entity.value)) {
+        Logger.debug({ ip: entity.value }, 'Blocked BlockListed IP Lookup');
+        return true;
+      }
+    }
+  }
+
+  if (entity.isDomain) {
+    if (domainBlocklistRegex !== null) {
+      if (domainBlocklistRegex.test(entity.value)) {
+        Logger.debug({ domain: entity.value }, 'Blocked BlockListed Domain Lookup');
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function _setupRegexBlocklists(options) {
+  if (options.domainBlocklistRegex !== previousDomainRegexAsString && options.domainBlocklistRegex.length === 0) {
+    Logger.debug('Removing Domain Blocklist Regex Filtering');
+    previousDomainRegexAsString = '';
+    domainBlocklistRegex = null;
+  } else {
+    if (options.domainBlocklistRegex !== previousDomainRegexAsString) {
+      previousDomainRegexAsString = options.domainBlocklistRegex;
+      Logger.debug({ domainBlocklistRegex: previousDomainRegexAsString }, 'Modifying Domain Blocklist Regex');
+      domainBlocklistRegex = new RegExp(options.domainBlocklistRegex, 'i');
+    }
+  }
+
+  if (options.ipBlocklistRegex !== previousIpRegexAsString && options.ipBlocklistRegex.length === 0) {
+    Logger.debug('Removing IP Blocklist Regex Filtering');
+    previousIpRegexAsString = '';
+    ipBlocklistRegex = null;
+  } else {
+    if (options.ipBlocklistRegex !== previousIpRegexAsString) {
+      previousIpRegexAsString = options.ipBlocklistRegex;
+      Logger.debug({ ipBlocklistRegex: previousIpRegexAsString }, 'Modifying IP Blocklist Regex');
+      ipBlocklistRegex = new RegExp(options.ipBlocklistRegex, 'i');
+    }
+  }
+}
+
 function _handleRequestErrors(cb) {
   return (err, response, body) => {
     log.trace({ err, body }, '_handleRequestErrors');
