@@ -6,6 +6,11 @@ const config = require('./config/config');
 const fs = require('fs');
 const TinyColor = require('@ctrl/tinycolor').TinyColor;
 
+let previousDomainRegexAsString = '';
+let previousIpRegexAsString = '';
+let domainBlocklistRegex = null;
+let ipBlocklistRegex = null;
+
 let TAGS_CACHE = [];
 let CACHE_REFRESHED_TIME;
 const CACHE_REFRESH_INTERVAL_IN_MS = 60 * 60 * 1000; //1 hour
@@ -69,19 +74,23 @@ function startup(logger) {
 function doLookup(entities, options, cb) {
   const lookupResults = [];
 
+  _setupRegexBlocklists(options);
+
   log.trace(entities);
 
   async.each(
     entities,
     function (entityObj, next) {
-      _lookupEntity(entityObj, options, function (err, result) {
-        if (err) {
-          next(err);
-        } else {
-          lookupResults.push(result);
-          next(null);
-        }
-      });
+      if (!_isEntityBlocklisted(entityObj, options)) {
+        _lookupEntity(entityObj, options, function (err, result) {
+          if (err) {
+            next(err);
+          } else {
+            lookupResults.push(result);
+            next(null);
+          }
+        });
+      }
     },
     function (err) {
       cb(err, lookupResults);
