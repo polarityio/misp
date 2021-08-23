@@ -67,6 +67,15 @@ module.exports = {
       adminOnly: true
     },
     {
+      key: 'enableRemovingTags',
+      name: 'Enable Removing Tags',
+      description: 'If checked, users can remove tags from an event from the Overlay Window',
+      default: true,
+      type: 'boolean',
+      userCanEdit: false,
+      adminOnly: true
+    },
+    {
       key: 'blocklist',
       name: 'Ignored Entities',
       description: 'List of domains and IPs that you never want to send to misp',
@@ -92,15 +101,6 @@ module.exports = {
       type: 'text',
       userCanEdit: false,
       adminOnly: false
-    },
-    {
-      key: 'enableRemovingTags',
-      name: 'Enable Removing Tags',
-      description: 'If checked, users can remove tags from an event from the Overlay Window',
-      default: true,
-      type: 'boolean',
-      userCanEdit: false,
-      adminOnly: true
     }
   ]
 };
