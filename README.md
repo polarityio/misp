@@ -32,6 +32,18 @@ If checked, users can remove tags from an event from the Overlay Window
 > Note that we recommend setting this option as an admin only option so the value is consistent across all your users.
 
 
+### Ignored Entities
+
+List of domains and IPs that you never want to send to misp
+
+### Ignored Domain Regex
+Domains that match the given regex will not be looked up.
+
+### Ignored IP Regex
+
+IPs that match the given regex will not be looked up.
+
+
 ## Installation Instructions
 
 Installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
