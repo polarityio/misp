@@ -2,9 +2,15 @@
 
 const request = require('request');
 const async = require('async');
+const _ = require('lodash');
 const config = require('./config/config');
 const fs = require('fs');
 const TinyColor = require('@ctrl/tinycolor').TinyColor;
+
+let previousDomainRegexAsString = '';
+let previousIpRegexAsString = '';
+let domainBlocklistRegex = null;
+let ipBlocklistRegex = null;
 
 let TAGS_CACHE = [];
 let CACHE_REFRESHED_TIME;
@@ -69,19 +75,23 @@ function startup(logger) {
 function doLookup(entities, options, cb) {
   const lookupResults = [];
 
+  _setupRegexBlocklists(options);
+
   log.trace(entities);
 
   async.each(
     entities,
     function (entityObj, next) {
-      _lookupEntity(entityObj, options, function (err, result) {
-        if (err) {
-          next(err);
-        } else {
-          lookupResults.push(result);
-          next(null);
-        }
-      });
+      if (!_isEntityBlocklisted(entityObj, options)) {
+        _lookupEntity(entityObj, options, function (err, result) {
+          if (err) {
+            next(err);
+          } else {
+            lookupResults.push(result);
+            next(null);
+          }
+        });
+      }
     },
     function (err) {
       cb(err, lookupResults);
@@ -503,6 +513,46 @@ function _validateAttributePayload(cb) {
 
     cb(err, response, body);
   };
+}
+
+function _isEntityBlocklisted(entity, options) {
+  const blocklist = options.blocklist;
+
+  log.trace({ blocklist: blocklist }, 'checking to see what blocklist looks like');
+
+  const isInBlocklist = _.includes(blocklist.toLowerCase(), entity.value.toLowerCase());
+  
+  const ipIsInBlocklistRegex =
+    ipBlocklistRegex !== null && entity.isIP && !entity.isPrivateIP && ipBlocklistRegex.test(entity.value);
+  if (ipIsInBlocklistRegex) log.debug({ ip: entity.value }, 'Blocked BlockListed IP Lookup');
+  
+  const domainIsInBlocklistRegex =
+    domainBlocklistRegex !== null && entity.isDomain && domainBlocklistRegex.test(entity.value);
+  if (domainIsInBlocklistRegex) log.debug({ domain: entity.value }, 'Blocked BlockListed Domain Lookup');
+
+  return isInBlocklist || ipIsInBlocklistRegex || domainIsInBlocklistRegex;
+}
+
+function _setupRegexBlocklists(options) {
+  if (options.domainBlocklistRegex !== previousDomainRegexAsString && options.domainBlocklistRegex.length === 0) {
+    log.debug('Removing Domain Blocklist Regex Filtering');
+    previousDomainRegexAsString = '';
+    domainBlocklistRegex = null;
+  } else if (options.domainBlocklistRegex !== previousDomainRegexAsString) {
+    previousDomainRegexAsString = options.domainBlocklistRegex;
+    log.debug({ domainBlocklistRegex: previousDomainRegexAsString }, 'Modifying Domain Blocklist Regex');
+    domainBlocklistRegex = new RegExp(options.domainBlocklistRegex, 'i');
+  }
+
+  if (options.ipBlocklistRegex !== previousIpRegexAsString && options.ipBlocklistRegex.length === 0) {
+    log.debug('Removing IP Blocklist Regex Filtering');
+    previousIpRegexAsString = '';
+    ipBlocklistRegex = null;
+  } else if (options.ipBlocklistRegex !== previousIpRegexAsString) {
+    previousIpRegexAsString = options.ipBlocklistRegex;
+    log.debug({ ipBlocklistRegex: previousIpRegexAsString }, 'Modifying IP Blocklist Regex');
+    ipBlocklistRegex = new RegExp(options.ipBlocklistRegex, 'i');
+  }
 }
 
 function _handleRequestErrors(cb) {

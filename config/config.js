@@ -5,7 +5,7 @@ module.exports = {
   description: 'Malware Information and Sharing Platform (MISP) threat intelligence platform',
   entityTypes: ['domain', 'IPv4', 'IPv6', 'hash', 'email'],
   styles: ['./styles/misp.less'],
-  defaultColor: "dark-purple",
+  defaultColor: 'dark-purple',
 
   block: {
     component: {
@@ -74,6 +74,33 @@ module.exports = {
       type: 'boolean',
       userCanEdit: false,
       adminOnly: true
+    },
+    {
+      key: 'blocklist',
+      name: 'Ignored Entities',
+      description: 'List of domains and IPs that you never want to send to misp',
+      default: '',
+      type: 'text',
+      userCanEdit: false,
+      adminOnly: false
+    },
+    {
+      key: 'domainBlocklistRegex',
+      name: 'Ignored Domain Regex',
+      description: 'Domains that match the given regex will not be looked up.',
+      default: '',
+      type: 'text',
+      userCanEdit: false,
+      adminOnly: false
+    },
+    {
+      key: 'ipBlocklistRegex',
+      name: 'Ignored IP Regex',
+      description: 'IPs that match the given regex will not be looked up.',
+      default: '',
+      type: 'text',
+      userCanEdit: false,
+      adminOnly: false
     }
   ]
 };
