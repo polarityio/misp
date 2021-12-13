@@ -393,7 +393,9 @@ function _getAttributeRequestOptions(entityObj, options) {
       Authorization: options.apiKey
     },
     body: {
-      value: entityObj.value.toLowerCase(),
+      // When parsing URLs Polarity does not include query parameters so we wildcard url lookups in MISP to match
+      // on URLs which include query params.
+      value: entityObj.isURL ? `${entityObj.value.toLowerCase()}%` : entityObj.value.toLowerCase(),
       limit: MAX_EVENTS_PER_ATTRIBUTE,
       includeEventTags: true
     },

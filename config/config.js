@@ -3,7 +3,7 @@ module.exports = {
   acronym: 'MISP',
   logging: { level: 'info' },
   description: 'Malware Information and Sharing Platform (MISP) threat intelligence platform',
-  entityTypes: ['domain', 'IPv4', 'IPv6', 'hash', 'email'],
+  entityTypes: ['domain', 'IPv4', 'IPv6', 'hash', 'email', 'url'],
   styles: ['./styles/misp.less'],
   defaultColor: 'dark-purple',
 

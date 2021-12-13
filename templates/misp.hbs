@@ -9,6 +9,17 @@
         <span class="p-key">Type: </span>
         <span class="p-value">{{attribute.type}}</span>
     </div>
+    {{!--
+      When parsing URLs Polarity does not include query parameters so we wildcard url lookups in MISP to match
+      on URLs which include query params.  To ensure the user knows the full url with query params we display the
+      full value here.
+    --}}
+    {{#if (eq attribute.type "url")}}
+        <div>
+            <span class="p-key">Value: </span>
+            <span class="p-value">{{attribute.value}}</span>
+        </div>
+    {{/if}}
     <div>
         <span class="p-key">Category: </span>
         <span class="p-value">{{attribute.category}}</span>
