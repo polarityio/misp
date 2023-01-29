@@ -6,7 +6,6 @@ module.exports = {
   entityTypes: ['domain', 'IPv4', 'IPv6', 'hash', 'email', 'url'],
   styles: ['./styles/misp.less'],
   defaultColor: 'dark-purple',
-
   block: {
     component: {
       file: './components/misp.js'
