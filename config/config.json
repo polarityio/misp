@@ -40,8 +40,8 @@
       "description": "URL of your MISP instance to include the schema (i.e., https://) and port if applicable",
       "default": "",
       "type": "text",
-      "userCanEdit": true,
-      "adminOnly": false
+      "userCanEdit": false,
+      "adminOnly": true
     },
     {
       "key": "apiKey",
@@ -49,8 +49,8 @@
       "description": "Your MISP API key",
       "default": "",
       "type": "password",
-      "userCanEdit": true,
-      "adminOnly": false
+      "userCanEdit": false,
+      "adminOnly": true
     },
     {
       "key": "enableAddingTags",
@@ -77,7 +77,7 @@
       "default": "",
       "type": "text",
       "userCanEdit": false,
-      "adminOnly": false
+      "adminOnly": true
     },
     {
       "key": "domainBlocklistRegex",
@@ -86,7 +86,7 @@
       "default": "",
       "type": "text",
       "userCanEdit": false,
-      "adminOnly": false
+      "adminOnly": true
     },
     {
       "key": "ipBlocklistRegex",
@@ -95,7 +95,7 @@
       "default": "",
       "type": "text",
       "userCanEdit": false,
-      "adminOnly": false
+      "adminOnly": true
     }
   ]
 }

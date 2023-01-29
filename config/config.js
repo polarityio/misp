@@ -44,8 +44,8 @@ module.exports = {
       description: 'URL of your MISP instance to include the schema (i.e., https://) and port if applicable',
       default: '',
       type: 'text',
-      userCanEdit: true,
-      adminOnly: false
+      userCanEdit: false,
+      adminOnly: true
     },
     {
       key: 'apiKey',
@@ -53,8 +53,8 @@ module.exports = {
       description: 'Your MISP API key',
       default: '',
       type: 'password',
-      userCanEdit: true,
-      adminOnly: false
+      userCanEdit: false,
+      adminOnly: true
     },
     {
       key: 'enableAddingTags',
@@ -81,7 +81,7 @@ module.exports = {
       default: '',
       type: 'text',
       userCanEdit: false,
-      adminOnly: false
+      adminOnly: true
     },
     {
       key: 'domainBlocklistRegex',
@@ -90,7 +90,7 @@ module.exports = {
       default: '',
       type: 'text',
       userCanEdit: false,
-      adminOnly: false
+      adminOnly: true
     },
     {
       key: 'ipBlocklistRegex',
@@ -99,7 +99,7 @@ module.exports = {
       default: '',
       type: 'text',
       userCanEdit: false,
-      adminOnly: false
+      adminOnly: true
     }
   ]
 };
