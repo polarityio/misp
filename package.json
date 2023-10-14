@@ -5,7 +5,7 @@
   "description": "Malware Information and Sharing Platform",
   "private": true,
   "dependencies": {
-    "@ctrl/tinycolor": "^3.5.0",
+    "@ctrl/tinycolor": "^3.6.1",
     "async": "^3.2.4",
     "lodash": "^4.17.21",
     "postman-request": "^2.88.1-postman.32"
