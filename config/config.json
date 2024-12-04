@@ -20,13 +20,22 @@
   "options": [
     {
       "key": "uri",
-      "name": "MISP URL",
-      "description": "URL of your MISP instance to include the schema (i.e., https://) and port if applicable",
+      "name": "MISP App URL",
+      "description": "App URL of your MISP instance to include the schema (i.e., https://) and port if applicable. This option must be set to \"Lock and show option to all users\".",
+      "default": "",
+      "type": "text",
+      "userCanEdit": false,
+      "adminOnly": false
+    },
+    {
+      "key": "uriApi",
+      "name": "MISP API URL",
+      "description": "API URL of your MISP instance to include the schema (i.e., https://) and port if applicable.  If left blank, the App URl will be used. For most deployments this option can be left blank.",
       "default": "",
       "type": "text",
       "userCanEdit": false,
       "adminOnly": true
-    },
+    },    
     {
       "key": "apiKey",
       "name": "Authentication Key",

@@ -1,7 +1,9 @@
 module.exports = {
   name: 'MISP',
   acronym: 'MISP',
-  logging: { level: 'info' },
+  logging: {
+    level: 'info'
+  },
   description: 'Malware Information and Sharing Platform (MISP) threat intelligence platform',
   entityTypes: ['domain', 'IPv4', 'IPv6', 'MD5', 'SHA1', 'SHA256', 'email', 'url'],
   styles: ['./styles/misp.less'],
@@ -34,8 +36,18 @@ module.exports = {
   options: [
     {
       key: 'uri',
-      name: 'MISP URL',
-      description: 'URL of your MISP instance to include the schema (i.e., https://) and port if applicable',
+      name: 'MISP App URL',
+      "description": "App URL of your MISP instance to include the schema (i.e., https://) and port if applicable. This option must be set to \"Lock and show option to all users\".",
+      default: '',
+      type: 'text',
+      userCanEdit: false,
+      adminOnly: false
+    },
+    {
+      key: 'uriApi',
+      name: 'MISP API URL',
+      description:
+        'API URL of your MISP instance to include the schema (i.e., https://) and port if applicable.  If left blank, the App URl will be used. For most deployments this option can be left blank.',
       default: '',
       type: 'text',
       userCanEdit: false,
