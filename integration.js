@@ -77,7 +77,7 @@ function doLookup(entities, options, cb) {
 
   _setupRegexBlocklists(options);
 
-  log.trace(entities);
+  log.trace({ entities }, 'doLookup');
 
   async.each(
     entities,
@@ -135,7 +135,7 @@ function _shouldRefreshCache() {
 function _removeTagFromEvent(eventId, tagId, options, cb) {
   requestWithDefaults(
     {
-      uri: `${options.uri}/events/removeTag`,
+      uri: `${getApiUri(options)}/events/removeTag`,
       method: 'POST',
       json: true,
       headers: {
@@ -180,7 +180,7 @@ function _removeTagFromEvent(eventId, tagId, options, cb) {
 function _removeTagFromAttribute(attributeId, tagId, options, cb) {
   requestWithDefaults(
     {
-      uri: `${options.uri}/attributes/removeTag/${attributeId}/${tagId}`,
+      uri: `${getApiUri(options)}/attributes/removeTag/${attributeId}/${tagId}`,
       method: 'POST',
       json: true,
       headers: {
@@ -227,7 +227,7 @@ function onMessage(payload, options, cb) {
 
       requestWithDefaults(
         {
-          uri: `${options.uri}/tags`,
+          uri: `${getApiUri(options)}/tags`,
           method: 'GET',
           json: true,
           headers: {
@@ -299,7 +299,7 @@ function onMessage(payload, options, cb) {
 
       requestWithDefaults(
         {
-          uri: `${options.uri}/events/addTag/${payload.eventId}`,
+          uri: `${getApiUri(options)}/events/addTag/${payload.eventId}`,
           method: 'POST',
           json: true,
           headers: {
@@ -375,14 +375,17 @@ function _getSummaryTags(attributes) {
   return tagList;
 }
 
+function getApiUri(options) {
+  let apiUri = options.uriApi ? options.uriApi : options.uri;
+  return apiUri.endsWith('/') ? apiUri.slice(0, -1) : apiUri;
+}
+
 function _getAttributeSearchUri(options) {
-  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri;
-  return `${uri}/attributes/restSearch`;
+  return `${getApiUri(options)}/attributes/restSearch`;
 }
 
 function _getEventSearchUri(options) {
-  const uri = options.uri.endsWith('/') ? options.uri.slice(0, -1) : options.uri;
-  return `${uri}/events/index`;
+  return `${getApiUri(options)}/events/index`;
 }
 
 function _getAttributeRequestOptions(entityObj, options) {
@@ -454,6 +457,7 @@ function _lookupEntity(entityObj, options, cb) {
     _handleRequestErrors(
       _validateAttributePayload((error, response, body) => {
         if (error) {
+          log.error({error}, '_lookupEntity Error');
           return cb(error);
         }
 
@@ -523,11 +527,11 @@ function _isEntityBlocklisted(entity, options) {
   log.trace({ blocklist: blocklist }, 'checking to see what blocklist looks like');
 
   const isInBlocklist = _.includes(blocklist.toLowerCase(), entity.value.toLowerCase());
-  
+
   const ipIsInBlocklistRegex =
     ipBlocklistRegex !== null && entity.isIP && !entity.isPrivateIP && ipBlocklistRegex.test(entity.value);
   if (ipIsInBlocklistRegex) log.debug({ ip: entity.value }, 'Blocked BlockListed IP Lookup');
-  
+
   const domainIsInBlocklistRegex =
     domainBlocklistRegex !== null && entity.isDomain && domainBlocklistRegex.test(entity.value);
   if (domainIsInBlocklistRegex) log.debug({ domain: entity.value }, 'Blocked BlockListed Domain Lookup');
@@ -559,10 +563,10 @@ function _setupRegexBlocklists(options) {
 
 function _handleRequestErrors(cb) {
   return (err, response, body) => {
-    log.trace({ err, body }, '_handleRequestErrors');
+    log.trace({ err, response, body }, '_handleRequestErrors');
     if (err || typeof response === 'undefined' || typeof body === 'undefined') {
       return cb({
-        detail: 'HTTP Request Error',
+        detail: err.code ? `Network Request Error (${err.code})` : `Network Request Error`,
         response: _sanitizeResponse(response),
         body: body,
         err: err
@@ -661,7 +665,7 @@ function validateOptions(userOptions, cb) {
   ) {
     errors.push({
       key: 'uri',
-      message: 'You must provide a valid url for MISP'
+      message: 'You must provide a valid App URL for MISP'
     });
   }
 
@@ -708,9 +712,9 @@ function _createJsonErrorObject(msg, pointer, httpCode, code, title, meta) {
 }
 
 module.exports = {
-  doLookup: doLookup,
-  startup: startup,
-  validateOptions: validateOptions,
-  onDetails: onDetails,
-  onMessage: onMessage
+  doLookup,
+  startup,
+  validateOptions,
+  onDetails,
+  onMessage
 };
